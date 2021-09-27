@@ -5,7 +5,8 @@ To run the Prolog file:
 Compile the file in SWI-Prolog.
 Query the below actions.
 
-Actions:%n
+Actions:
+
   in(Peg,Hole) :- Shows relationships between a peg and it's corresponding hole. Uses atom empty when no peg is present.
   
   adjacent(Hole1, Hole2) :- Shows relationships between adjacent holes. Can be used to create full adjacency matrix.
