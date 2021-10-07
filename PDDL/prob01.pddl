@@ -1,8 +1,9 @@
 (define (problem ThreePegs) (:domain TRICKY_TRIANGLE)
-    (:objects p1 p2 p4 p5 p6 p7 p8 p9 p10 h1 h2 h3 h4 h5 h6 h7 h8 h9 h10 s1 s2 s3 s4 s5 s6 s7 s8 s9 s10)
+    (:objects p1 p3 p4 p5 p6 p7 p8 p9 p10 h1 h2 h3 h4 h5 h6 h7 h8 h9 h10)
     (:init
         (peg p1)
-        (peg p2)
+        
+        (peg p3)
         (peg p4)
         (peg p5)
         (peg p6)
@@ -22,10 +23,11 @@
         (hole h9)
         (hole h10)
         
-        (empty-hole s3)
+        (empty-hole h2)
         
         (in p1 h1)
-        (in p2 h2)
+        
+        (in p3 h3)
         (in p4 h4)
         (in p5 h5)
         (in p6 h6)
@@ -77,16 +79,16 @@
 
     (:goal  
         (and 
-            (in p10 h4)
-            (empty-hole s1)
-            (empty-hole s2)
-            (empty-hole s3)
-            (empty-hole s5)
-            (empty-hole s6)
-            (empty-hole s7)
-            (empty-hole s8)
-            (empty-hole s9)
-            (empty-hole s10)
+            (empty-hole h1)
+            (empty-hole h2)
+            (empty-hole h3)
+
+            (empty-hole h5)
+            (empty-hole h6)
+            (empty-hole h7)
+            (empty-hole h8)
+            (empty-hole h9)
+            (empty-hole h10)
         )
     )
 )
