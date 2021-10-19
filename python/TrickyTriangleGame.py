@@ -6,7 +6,6 @@ class Hole():
     def __init__(self, id):
         self.id = id
         self.adjacents = []
-        self.lines = []
         self.peg = None
 
     def add_adjacent(self, other):
@@ -19,6 +18,9 @@ class Board:
     def __init__(self, num_levels):
         self.holes = []
         self.levels = []
+
+        self.lines = []
+
         level_count = 0
         for i in range(num_levels):
             level_count = level_count + 1
@@ -81,6 +83,33 @@ class Board:
         #   1 2
         #  3 4 5
         # 6 7 8 9
+
+        self.lines.append([self.holes[0],self.holes[1], self.holes[3]])
+        self.lines.append([self.holes[0],self.holes[2], self.holes[5]])
+
+        self.lines.append([self.holes[1],self.holes[3], self.holes[6]])
+        self.lines.append([self.holes[1],self.holes[4], self.holes[8]])
+
+        self.lines.append([self.holes[2],self.holes[4], self.holes[7]])
+        self.lines.append([self.holes[2],self.holes[5], self.holes[9]])
+        
+        self.lines.append([self.holes[3],self.holes[1], self.holes[0]])
+        self.lines.append([self.holes[3],self.holes[4], self.holes[5]])
+
+        self.lines.append([self.holes[5],self.holes[2], self.holes[0]])
+        self.lines.append([self.holes[5],self.holes[4], self.holes[3]])
+
+        self.lines.append([self.holes[6],self.holes[3], self.holes[1]])
+        self.lines.append([self.holes[6],self.holes[7], self.holes[8]])
+
+        self.lines.append([self.holes[7],self.holes[4], self.holes[2]])
+        self.lines.append([self.holes[7],self.holes[8], self.holes[9]])
+
+        self.lines.append([self.holes[8],self.holes[4], self.holes[1]])
+        self.lines.append([self.holes[8],self.holes[7], self.holes[6]])
+
+        self.lines.append([self.holes[9],self.holes[5], self.holes[2]])
+        self.lines.append([self.holes[9],self.holes[8], self.holes[7]])
 
 if __name__ == "__main__":
     game = Board(4)
