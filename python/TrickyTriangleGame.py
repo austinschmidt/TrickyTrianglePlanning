@@ -30,8 +30,9 @@ class Board:
 
     def peg_exists(self, peg):
         for h in self.holes:
-            if h.peg.id is peg.id:
-                return True
+            if h.peg is not None:
+                if h.peg.id is peg.id:
+                    return True
         return False
 
     def hole_empty(self, hole):
@@ -41,13 +42,36 @@ class Board:
             return False
 
     def check_if_move_allowed(self, peg, source_hole, over_hole, destination_hole):
-        if peg_exists(peg) and peg_in(peg, source_hole) and not hole_empty(over_hole) and hole_empty(destination_hole):
+        if self.peg_exists(peg) and self.peg_in(peg, source_hole) and not self.hole_empty(over_hole) and self.hole_empty(destination_hole) and ([source_hole, over_hole, destination_hole] in self.lines):
            return True
         else:
             return False
 
+    #method to detect if legal moves are present on the board
+    def legal_moves(self):
+        legal_moves = {}
+        for h in self.holes:
+            if h.peg is not None:
+                for over in h.adjacents:
+                    for dest in over.adjacents:
+                        if over is not dest and h is not over and h is not dest:
+                            if self.check_if_move_allowed(h.peg, h, over, dest):
+                                print("peg"+str(h.peg.id)+" source"+str(h.id)+" over"+str(over.id)+" dest"+str(dest.id))
+
+    def move_peg(self, peg, source_hole, over_hole, destination_hole):
+        if self.check_if_move_allowed(peg, source_hole, over_hole, destination_hole):
+            self.remove_peg(over_hole)
+            peg_to_insert = self.remove_peg(source_hole)
+            self.insert_peg(peg_to_insert, destination_hole)
+
     def remove_peg(self, hole):
+        peg = self.holes[hole.id].peg
         self.holes[hole.id].peg = None
+        return peg
+
+    def insert_peg(self, peg, hole):
+        self.holes[hole.id].peg = peg
+    
 
     def __init__(self, num_levels):
         self.number_of_pegs = 0
@@ -157,13 +181,29 @@ class Board:
 
 if __name__ == "__main__":
     game = Board(4)
+    
     #should be true
     print(game.peg_in(game.holes[0].peg, game.holes[0]))
+    
     #should be true
     print(game.peg_exists(game.holes[0].peg))
+    
     #should be false
     print(game.hole_empty(game.holes[0]))
 
     #shoudl be true
     print(game.hole_empty(game.holes[2]))
+
+    #should be true
+    peg = game.holes[9].peg
+    source_hole = game.holes[9]
+    over_hole = game.holes[5]
+    destination_hole = game.holes[2]
+    print(game.check_if_move_allowed(peg, source_hole, over_hole, destination_hole))
+
+    game.legal_moves()
+    print()
+
+    game.move_peg(game.holes[9].peg, game.holes[9], game.holes[5], game.holes[2])
+    game.legal_moves()
     print()
