@@ -208,12 +208,14 @@ class Board:
         over = move[1]
         dest = move[2]
         if self.check_if_move_allowed(peg, source, over, dest):
-            
             self.move_peg(peg, source, over, dest)
             if len(self.legal_moves()) == 0:
-                done = True
-                print("Sucess")
-                reward = 2.0
+                if self.number_of_pegs == 1:
+                    print("sucess")
+                    reward = +2.0
+                else:
+                    done = True
+                    reward = -0.5
             else:
                 reward = 1.0
                 done = False
