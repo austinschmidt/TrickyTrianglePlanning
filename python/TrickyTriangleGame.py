@@ -50,6 +50,7 @@ class Board:
         self.holes[hole.id].peg = None
 
     def __init__(self, num_levels):
+        self.number_of_pegs = 0
         self.holes = []
         self.levels = []
 
@@ -149,6 +150,7 @@ class Board:
         for location in self.holes:
             location.insert_peg(Peg(count))
             count = count +1
+            self.number_of_pegs = self.number_of_pegs-1
 
         #remove the peg from hole 2
         self.remove_peg(self.holes[2])
