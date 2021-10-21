@@ -176,34 +176,36 @@ class Board:
             count = count +1
             self.number_of_pegs = self.number_of_pegs-1
 
-        #remove the peg from hole 2
-        self.remove_peg(self.holes[2])
 
 if __name__ == "__main__":
     game = Board(4)
+    debug = True
+    if debug:
+        #remove the peg from hole 2
+        game.remove_peg(game.holes[2])
+        
+        #should be true
+        print(game.peg_in(game.holes[0].peg, game.holes[0]))
     
-    #should be true
-    print(game.peg_in(game.holes[0].peg, game.holes[0]))
+        #should be true
+        print(game.peg_exists(game.holes[0].peg))
     
-    #should be true
-    print(game.peg_exists(game.holes[0].peg))
-    
-    #should be false
-    print(game.hole_empty(game.holes[0]))
+        #should be false
+        print(game.hole_empty(game.holes[0]))
 
-    #shoudl be true
-    print(game.hole_empty(game.holes[2]))
+        #shoudl be true
+        print(game.hole_empty(game.holes[2]))
 
-    #should be true
-    peg = game.holes[9].peg
-    source_hole = game.holes[9]
-    over_hole = game.holes[5]
-    destination_hole = game.holes[2]
-    print(game.check_if_move_allowed(peg, source_hole, over_hole, destination_hole))
+        #should be true
+        peg = game.holes[9].peg
+        source_hole = game.holes[9]
+        over_hole = game.holes[5]
+        destination_hole = game.holes[2]
+        print(game.check_if_move_allowed(peg, source_hole, over_hole, destination_hole))
 
-    game.legal_moves()
-    print()
+        game.legal_moves()
+        print()
 
-    game.move_peg(game.holes[9].peg, game.holes[9], game.holes[5], game.holes[2])
-    game.legal_moves()
-    print()
+        game.move_peg(game.holes[9].peg, game.holes[9], game.holes[5], game.holes[2])
+        game.legal_moves()
+        print()
