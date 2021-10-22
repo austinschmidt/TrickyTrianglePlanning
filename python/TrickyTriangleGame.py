@@ -1,3 +1,5 @@
+#partially based on https://keras.io/examples/rl/actor_critic_cartpole/
+
 import numpy as np
 import tensorflow as tf
 from tensorflow import keras
@@ -212,28 +214,28 @@ class Board:
             if len(self.legal_moves()) == 0:
                 if self.number_of_pegs == 1:
                     print("sucess")
-                    reward = +3.0
+                    reward = +10.0
                     done = True
                 elif self.number_of_pegs == 2:
                     print("two remained")
                     done = True
-                    reward = +2.0
+                    reward = 2.0
                 elif self.number_of_pegs == 3:
                     print("three remained")
                     done = True
-                    reward = +1.0
+                    reward = 1.0
                 else:
                     done = True
-                    reward = -1.0
+                    reward = -10.0
             else:
-                reward = 1.0
+                reward = +0.5
                 done = False
         else:
             if len(self.legal_moves()) == 0:
                 done = True
-                reward = -1.0
+                reward = -10.0
             else:
-                reward = 0.0
+                reward = -0.5
                 done = False
         return self.get_state(), reward, done, {}
     
@@ -255,22 +257,24 @@ if __name__ == "__main__":
 
     #actor critic model
     # Configuration parameters for the whole setup
-    seed = 42
+    
     gamma = 0.99  # Discount factor for past rewards
-    max_steps_per_episode = 50
+    max_steps_per_episode = 100
     num_inputs = len(game.holes)
     num_actions = len(game.lines)
     eps = np.finfo(np.float32).eps.item()
     
-    num_hidden = 256
+    num_hidden = 128
 
     inputs = layers.Input(shape=(num_inputs,))
-    common = layers.Dense(num_hidden, activation="relu")(inputs)
+    x = layers.Dense(num_hidden, activation="relu")(inputs)
+    common = layers.Dense(num_hidden, activation="relu")(x)
+    common = layers.Dense(num_actions, activation="linear")(common)
     action = layers.Dense(num_actions, activation="softmax")(common)
     critic = layers.Dense(1)(common)
 
     model = keras.Model(inputs=inputs, outputs=[action, critic])
-
+    model.summary()
     optimizer = keras.optimizers.Adam(learning_rate=0.01)
     huber_loss = keras.losses.Huber()
     action_probs_history = []
