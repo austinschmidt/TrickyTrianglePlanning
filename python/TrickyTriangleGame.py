@@ -212,19 +212,28 @@ class Board:
             if len(self.legal_moves()) == 0:
                 if self.number_of_pegs == 1:
                     print("sucess")
+                    reward = +3.0
+                    done = True
+                elif self.number_of_pegs == 2:
+                    print("two remained")
+                    done = True
                     reward = +2.0
+                elif self.number_of_pegs == 3:
+                    print("three remained")
+                    done = True
+                    reward = +1.0
                 else:
                     done = True
-                    reward = -0.5
+                    reward = -1.0
             else:
                 reward = 1.0
                 done = False
         else:
             if len(self.legal_moves()) == 0:
                 done = True
-                reward = -2.0
-            else:
                 reward = -1.0
+            else:
+                reward = 0.0
                 done = False
         return self.get_state(), reward, done, {}
     
@@ -253,7 +262,7 @@ if __name__ == "__main__":
     num_actions = len(game.lines)
     eps = np.finfo(np.float32).eps.item()
     
-    num_hidden = 128
+    num_hidden = 256
 
     inputs = layers.Input(shape=(num_inputs,))
     common = layers.Dense(num_hidden, activation="relu")(inputs)
