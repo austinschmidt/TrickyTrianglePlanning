@@ -264,7 +264,7 @@ if __name__ == "__main__":
     num_actions = len(game.lines)
     eps = np.finfo(np.float32).eps.item()
     
-    num_hidden = 256
+    num_hidden = 128
 
     inputs = layers.Input(shape=(num_inputs,))
     x = layers.Dense(num_hidden, activation="relu")(inputs)
