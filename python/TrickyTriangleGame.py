@@ -269,7 +269,7 @@ if __name__ == "__main__":
     inputs = layers.Input(shape=(num_inputs,))
     x = layers.Dense(num_hidden, activation="relu")(inputs)
     common = layers.Dense(num_hidden, activation="relu")(x)
-    common = layers.Dense(num_actions, activation="linear")(common)
+    #common = layers.Dense(num_actions, activation="linear")(common)
     action = layers.Dense(num_actions, activation="softmax")(common)
     critic = layers.Dense(1)(common)
 
