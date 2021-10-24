@@ -264,7 +264,7 @@ if __name__ == "__main__":
     num_actions = len(game.lines)
     eps = np.finfo(np.float32).eps.item()
     
-    num_hidden = 128
+    num_hidden = 256
 
     inputs = layers.Input(shape=(num_inputs,))
     x = layers.Dense(num_hidden, activation="relu")(inputs)
@@ -275,7 +275,7 @@ if __name__ == "__main__":
 
     model = keras.Model(inputs=inputs, outputs=[action, critic])
     model.summary()
-    optimizer = keras.optimizers.Adam(learning_rate=0.01)
+    optimizer = keras.optimizers.Adam(learning_rate=0.02)
     huber_loss = keras.losses.Huber()
     action_probs_history = []
     critic_value_history = []
