@@ -1,0 +1,17 @@
+(define (problem line3_2_2)
+(:domain pegs)
+(:objects p0 h0 p1 h1 h2 )
+(:init
+	(empty h2)
+	(in p0 h0)
+	(in p1 h1)
+	(adjacent h0 h1)
+	(adjacent h1 h0)
+	(adjacent h1 h2)
+	(adjacent h2 h1)
+	(inline h0 h1 h2)
+	(inline h2 h1 h0))
+(:goal (and 
+	(empty h0)
+	(empty h1)
+)))
