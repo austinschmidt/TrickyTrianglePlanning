@@ -213,30 +213,29 @@ class Board:
             self.move_peg(peg, source, over, dest)
             if len(self.legal_moves()) == 0:
                 if self.number_of_pegs == 1:
-                    print("sucess")
-                    reward = +10.0
+                    reward = +3.0
                     done = True
                 elif self.number_of_pegs == 2:
-                    print("two remained")
                     done = True
                     reward = 2.0
                 elif self.number_of_pegs == 3:
-                    print("three remained")
                     done = True
                     reward = 1.0
                 else:
                     done = True
-                    reward = -10.0
+                    reward = -1.0
             else:
-                reward = +0.5
+                reward = +0.1
                 done = False
         else:
             if len(self.legal_moves()) == 0:
                 done = True
-                reward = -10.0
+                reward = -1.0
             else:
-                reward = -0.5
+                #reward = -0.5
+                reward = -0.1
                 done = False
+                
         return self.get_state(), reward, done, {}
     
 
@@ -269,7 +268,7 @@ if __name__ == "__main__":
     inputs = layers.Input(shape=(num_inputs,))
     x = layers.Dense(num_hidden, activation="relu")(inputs)
     common = layers.Dense(num_hidden, activation="relu")(x)
-    #common = layers.Dense(num_actions, activation="linear")(common)
+    #common = layers.Dense(num_hidden, activation="relu")(common)
     action = layers.Dense(num_actions, activation="softmax")(common)
     critic = layers.Dense(1)(common)
 
@@ -277,6 +276,7 @@ if __name__ == "__main__":
     model.summary()
     optimizer = keras.optimizers.Adam(learning_rate=0.02)
     huber_loss = keras.losses.Huber()
+    #huber_loss = keras.losses.MeanSquaredError()
     action_probs_history = []
     critic_value_history = []
     rewards_history = []
@@ -309,6 +309,7 @@ if __name__ == "__main__":
                 if done:
                     break
 
+            print(game.number_of_pegs)
             # Update running reward to check condition for solving
             running_reward = 0.05 * episode_reward + (1 - 0.05) * running_reward
 
@@ -358,6 +359,7 @@ if __name__ == "__main__":
 
         # Log details
         episode_count += 1
-        if episode_count % 100 == 0:
+        if episode_count % 10 == 0:
             template = "running reward: {:.2f} at episode {}"
             print(template.format(running_reward, episode_count))
+            
