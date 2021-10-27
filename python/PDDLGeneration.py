@@ -9,8 +9,20 @@ def gen_pegs_in_holes(shape, size, empty):
         holes = size*size
         return pegs_in_holes(holes,empty)
 
+    elif(shape=="rectangle"):
+        holes = size*(size*2)
+        return pegs_in_holes(holes,empty)
+
     elif(shape=="line"):
         return pegs_in_holes(size,empty)
+
+    elif(shape=="diamond"):
+        holes = size*size
+        return pegs_in_holes(holes, empty)
+
+    elif(shape=="arrow"):
+        holes = sum(range(1,size+3)) + size*size
+        return pegs_in_holes(holes,empty)
 
     else:
         return "Invalid Shape For Goal"
@@ -29,10 +41,19 @@ def adjacency(shape, shape_size):
         return triangle_adjacency(shape_size)
 
     elif(shape=="square"):
-        return square_adjacency(shape_size)
+        return square_adjacency(shape_size, shape_size)
+
+    elif(shape=="rectangle"):
+        return square_adjacency(shape_size, shape_size*2)
 
     elif(shape=="line"):
         return line_adjacency(shape_size) 
+
+    elif(shape=="diamond"):
+        return diamond_adjacency(shape_size)
+
+    elif(shape=="arrow"):
+        return arrow_adjacency(shape_size)
 
     else:
         return "Invalid Shape For Goal"
@@ -64,7 +85,88 @@ def triangle_adjacency(shape_size):
         col_reduc+=1
     return adj_string
 
-def square_adjacency(shape_size):
+def square_adjacency(shape_size, rect_offset):
+    adj_string = ""
+    peg_num = 0
+    for row in range(rect_offset):
+        for col in range(shape_size):
+
+            #horizontal adjacency
+            if(col!=shape_size-1):
+                adj_string+= "\t(adjacent h" + str(peg_num) + " h" +str(peg_num+1) + ")\n" 
+                adj_string+= "\t(adjacent h" + str(peg_num+1) + " h" +str(peg_num) + ")\n"
+            
+            #vertical adjacency
+            if(row!=rect_offset-1):
+                adj_string+= "\t(adjacent h" + str(peg_num) + " h" +str(peg_num+shape_size) + ")\n" 
+                adj_string+= "\t(adjacent h" + str(peg_num+shape_size) + " h" +str(peg_num) + ")\n"
+    
+            peg_num+=1
+    return adj_string
+
+def line_adjacency(shape_size):
+    adj_string = ""
+    for spot in range(shape_size-1):
+        adj_string+= "\t(adjacent h" + str(spot) + " h" +str(spot+1) + ")\n" 
+        adj_string+= "\t(adjacent h" + str(spot+1) + " h" +str(spot) + ")\n"
+    
+    return adj_string
+
+def diamond_adjacency(shape_size):
+    adj_string = ""
+    peg_num = 0
+    col_reduc=shape_size-1
+    for row in range(shape_size):
+        row_num = shape_size-col_reduc
+        for col in range(row_num):
+            #horizontal adjacency
+            if(col+1%(row_num)!=(row_num) and row_num!=1):
+                adj_string+= "\t(adjacent h" + str(peg_num) + " h" +str(peg_num+1) + ")\n" 
+                adj_string+= "\t(adjacent h" + str(peg_num+1) + " h" +str(peg_num) + ")\n"
+            
+            #0 special case
+            if(row == 0):
+                adj_string+= "\t(adjacent h" + str(peg_num) + " h" +str(peg_num+row_num) + ")\n" 
+                adj_string+= "\t(adjacent h" + str(peg_num+row_num) + " h" +str(peg_num) + ")\n"
+                adj_string+= "\t(adjacent h" + str(peg_num) + " h" +str(peg_num+row_num+1) + ")\n" 
+                adj_string+= "\t(adjacent h" + str(peg_num+row_num+1) + " h" +str(peg_num) + ")\n"
+
+            #vertical_l adjacency
+            if(col!=row_num-1 and row!=shape_size-1):
+                adj_string+= "\t(adjacent h" + str(peg_num) + " h" +str(peg_num+row_num) + ")\n" 
+                adj_string+= "\t(adjacent h" + str(peg_num+row_num) + " h" +str(peg_num) + ")\n"
+    
+            #vertical_r adjacency
+            if(col!=row_num and row!=shape_size-1):
+                adj_string+= "\t(adjacent h" + str(peg_num) + " h" +str(peg_num+row_num+1) + ")\n" 
+                adj_string+= "\t(adjacent h" + str(peg_num+row_num+1) + " h" +str(peg_num) + ")\n"
+
+            peg_num+=1
+        col_reduc-=1
+    peg_num-=shape_size #Resetting overcounted pegs
+    col_reduc=0
+    for row in range(shape_size-1):
+        row_num = shape_size-col_reduc
+        for col in range(row_num):
+            #horizontal adjacency
+            if(col+1%(row_num)!=(row_num) and col_reduc!=0):
+                adj_string+= "\t(adjacent h" + str(peg_num) + " h" +str(peg_num+1) + ")\n" 
+                adj_string+= "\t(adjacent h" + str(peg_num+1) + " h" +str(peg_num) + ")\n"
+            
+            #vertical_l adjacency
+            if(col!=0):
+                adj_string+= "\t(adjacent h" + str(peg_num) + " h" +str(peg_num+row_num-1) + ")\n" 
+                adj_string+= "\t(adjacent h" + str(peg_num+row_num-1) + " h" +str(peg_num) + ")\n"
+    
+            #vertical_r adjacency
+            if(col!=row_num-1):
+                adj_string+= "\t(adjacent h" + str(peg_num) + " h" +str(peg_num+row_num) + ")\n" 
+                adj_string+= "\t(adjacent h" + str(peg_num+row_num) + " h" +str(peg_num) + ")\n"
+            peg_num+=1
+        col_reduc+=1
+    return adj_string
+
+def arrow_adjacency(shape_size):
     adj_string = ""
     peg_num = 0
     for row in range(shape_size):
@@ -80,15 +182,33 @@ def square_adjacency(shape_size):
                 adj_string+= "\t(adjacent h" + str(peg_num) + " h" +str(peg_num+shape_size) + ")\n" 
                 adj_string+= "\t(adjacent h" + str(peg_num+shape_size) + " h" +str(peg_num) + ")\n"
     
-            peg_num+=1
-    return adj_string
+            if(row == shape_size-1):
+                adj_string+= "\t(adjacent h" + str(peg_num) + " h" +str(peg_num+shape_size+1) + ")\n" 
+                adj_string+= "\t(adjacent h" + str(peg_num+shape_size+1) + " h" +str(peg_num) + ")\n"
 
-def line_adjacency(shape_size):
-    adj_string = ""
-    for spot in range(shape_size-1):
-        adj_string+= "\t(adjacent h" + str(spot) + " h" +str(spot+1) + ")\n" 
-        adj_string+= "\t(adjacent h" + str(spot+1) + " h" +str(spot) + ")\n"
+            peg_num+=1
+    col_reduc=0
+    shape_size+=2
+    for row in range(shape_size-1):
+        row_num = shape_size-col_reduc
+        for col in range(row_num):
+
+            #horizontal adjacency
+            if(col+1%(row_num)!=(row_num)):
+                adj_string+= "\t(adjacent h" + str(peg_num) + " h" +str(peg_num+1) + ")\n" 
+                adj_string+= "\t(adjacent h" + str(peg_num+1) + " h" +str(peg_num) + ")\n"
+            
+            #vertical_l adjacency
+            if(col!=0):
+                adj_string+= "\t(adjacent h" + str(peg_num) + " h" +str(peg_num+row_num-1) + ")\n" 
+                adj_string+= "\t(adjacent h" + str(peg_num+row_num-1) + " h" +str(peg_num) + ")\n"
     
+            #vertical_r adjacency
+            if(col!=row_num-1):
+                adj_string+= "\t(adjacent h" + str(peg_num) + " h" +str(peg_num+row_num) + ")\n" 
+                adj_string+= "\t(adjacent h" + str(peg_num+row_num) + " h" +str(peg_num) + ")\n"
+            peg_num+=1
+        col_reduc+=1
     return adj_string
 
 def inline(shape, shape_size):
@@ -96,10 +216,20 @@ def inline(shape, shape_size):
         return triangle_inline(shape_size)
 
     elif(shape=="square"):
-        return square_inline(shape_size)
+        return square_inline(shape_size,shape_size)
+
+    elif(shape=="rectangle"):
+        return square_inline(shape_size,shape_size*2)
 
     elif(shape=="line"):
         return line_inline(shape_size)
+
+    elif(shape=="diamond"):
+        return line_diamond(shape_size)
+
+    elif(shape=="arrow"):
+        return line_arrow(shape_size)
+
     else:
         return "Invalid Shape For Goal"
 
@@ -135,23 +265,22 @@ def triangle_inline(shape_size):
         col_reduc+=1
     return inline_string
 
-def square_inline(shape_size):
+def square_inline(shape_size, rect_offset):
     inline_string = ""
     peg_num = 0
-    for row in range(shape_size):
-        if (row==shape_size-2):
+    for row in range(rect_offset):
+        if (row==rect_offset-2):
             n=""
         else:
             n="\n"
         for col in range(shape_size):
-
             #horizontal line
             if(col%shape_size<shape_size-2):
                 inline_string+= "\t(inline h" + str(peg_num) + " h" +str(peg_num+1) + " h" +str(peg_num+2) + ")\n" 
                 inline_string+= "\t(inline h" + str(peg_num+2) + " h" +str(peg_num+1) + " h" +str(peg_num) + ")\n"
             
             #vertical line
-            if(row<shape_size-2):
+            if(row<rect_offset-2):
                 inline_string+= "\t(inline h" + str(peg_num) + " h" +str(peg_num+shape_size) + " h" +str(peg_num+shape_size*2) +")\n" 
                 inline_string+= "\t(inline h" + str(peg_num+shape_size*2) + " h" +str(peg_num+shape_size) + " h" +str(peg_num) + ")" + n
 
@@ -170,6 +299,105 @@ def line_inline(shape_size):
         inline_string+= "\t(inline h" + str(spot+2) + " h" + str(spot+1) + " h" + str(spot) + ")" + n
     return inline_string
 
+def line_diamond(shape_size):
+    inline_string = ""
+    peg_num = 0
+    col_reduc=shape_size-1
+    for row in range(shape_size):
+        row_num = shape_size-col_reduc
+        for col in range(row_num):
+            #horizontal line
+            if(col+2%(row_num)<(row_num) and row_num>2):
+                inline_string+= "\t(inline h" + str(peg_num) + " h" + str(peg_num+1) + " h" + str(peg_num+2) + ")\n" 
+                inline_string+= "\t(inline h" + str(peg_num+2) + " h" + str(peg_num+1) + " h" + str(peg_num) + ")\n"
+            
+            #vertical_l line
+            if(row<shape_size-2):
+                inline_string+= "\t(inline h" + str(peg_num) + " h" + str(peg_num+row_num) + " h" + str(peg_num+row_num*2+1) + ")\n" 
+                inline_string+= "\t(inline h" + str(peg_num+row_num*2+1) + " h" + str(peg_num+row_num) + " h" + str(peg_num) + ")\n" 
+            elif(row<shape_size-1 and col>0):
+                inline_string+= "\t(inline h" + str(peg_num) + " h" + str(peg_num+shape_size-1) + " h" + str(peg_num+shape_size*2-2) + ")\n" 
+                inline_string+= "\t(inline h" + str(peg_num+shape_size*2-2) + " h" + str(peg_num+shape_size-1) + " h" + str(peg_num) + ")\n" 
+    
+            #vertical_r line
+            if(row_num<shape_size-1 and row_num>0):
+                inline_string+= "\t(inline h" + str(peg_num) + " h" + str(peg_num+row_num+1) + " h" + str(peg_num+row_num*2+3) + ")\n" 
+                inline_string+= "\t(inline h" + str(peg_num+row_num*2+3) + " h" + str(peg_num+row_num+1) + " h" + str(peg_num) + ")\n"
+            elif(row<shape_size-1 and col<shape_size-2):
+                inline_string+= "\t(inline h" + str(peg_num) + " h" + str(peg_num+shape_size) + " h" + str(peg_num+shape_size*2) + ")\n" 
+                inline_string+= "\t(inline h" + str(peg_num+shape_size*2) + " h" + str(peg_num+shape_size) + " h" + str(peg_num) + ")\n" 
+            peg_num+=1
+        col_reduc-=1
+
+    peg_num-=shape_size #Resetting overcounted pegs
+    col_reduc=0
+    for row in range(shape_size-1):
+        row_num = shape_size-col_reduc
+        for col in range(row_num):
+            #horizontal line
+            if(col+2%(row_num)<(row_num) and row<shape_size-2 and row>0):
+                inline_string+= "\t(inline h" + str(peg_num) + " h" + str(peg_num+1) + " h" + str(peg_num+2) + ")\n" 
+                inline_string+= "\t(inline h" + str(peg_num+2) + " h" + str(peg_num+1) + " h" + str(peg_num) + ")\n"
+            
+            #vertical_l line
+            if(col>1 and row<shape_size-2):
+                inline_string+= "\t(inline h" + str(peg_num) + " h" + str(peg_num+row_num-1) + " h" + str(peg_num+row_num*2-3) + ")\n" 
+                inline_string+= "\t(inline h" + str(peg_num+row_num*2-3) + " h" + str(peg_num+row_num-1) + " h" + str(peg_num) + ")\n" 
+    
+            #vertical_r line
+            if(col<row_num-2 and row<shape_size-2):
+                inline_string+= "\t(inline h" + str(peg_num) + " h" + str(peg_num+row_num) + " h" + str(peg_num+row_num*2-1) + ")\n" 
+                inline_string+= "\t(inline h" + str(peg_num+row_num*2-1) + " h" + str(peg_num+row_num) + " h" + str(peg_num) + ")\n"
+
+            peg_num+=1
+        col_reduc+=1
+    return inline_string
+
+def line_arrow(shape_size):
+    inline_string = ""
+    peg_num = 0
+    for row in range(shape_size):
+        for col in range(shape_size):
+            #horizontal line
+            if(col%shape_size<shape_size-2):
+                inline_string+= "\t(inline h" + str(peg_num) + " h" +str(peg_num+1) + " h" +str(peg_num+2) + ")\n" 
+                inline_string+= "\t(inline h" + str(peg_num+2) + " h" +str(peg_num+1) + " h" +str(peg_num) + ")\n"
+            
+            #vertical line
+            if(row<shape_size-2):
+                inline_string+= "\t(inline h" + str(peg_num) + " h" +str(peg_num+shape_size) + " h" +str(peg_num+shape_size*2) +")\n" 
+                inline_string+= "\t(inline h" + str(peg_num+shape_size*2) + " h" +str(peg_num+shape_size) + " h" +str(peg_num) + ")\n" 
+            
+            if(row<shape_size-1):
+                inline_string+= "\t(inline h" + str(peg_num) + " h" +str(peg_num+shape_size) + " h" +str(peg_num+shape_size*2+1) +")\n" 
+                inline_string+= "\t(inline h" + str(peg_num+shape_size*2+1) + " h" +str(peg_num+shape_size) + " h" +str(peg_num) + ")\n"
+
+            peg_num+=1
+    shape_size+=2
+    col_reduc=0
+    for row in range(shape_size-1):
+        row_num = shape_size-col_reduc
+        for col in range(row_num):
+
+            #horizontal line
+            if(col+2%(row_num)<(row_num) and row<shape_size-2):
+                inline_string+= "\t(inline h" + str(peg_num) + " h" + str(peg_num+1) + " h" + str(peg_num+2) + ")\n" 
+                inline_string+= "\t(inline h" + str(peg_num+2) + " h" + str(peg_num+1) + " h" + str(peg_num) + ")\n"
+            
+            #vertical_l line
+            if(col>1 and row<shape_size-2):
+                inline_string+= "\t(inline h" + str(peg_num) + " h" + str(peg_num+row_num-1) + " h" + str(peg_num+row_num*2-3) + ")\n" 
+                inline_string+= "\t(inline h" + str(peg_num+row_num*2-3) + " h" + str(peg_num+row_num-1) + " h" + str(peg_num) + ")\n" 
+    
+            #vertical_r line
+            if(col<row_num-2 and row<shape_size-2):
+                inline_string+= "\t(inline h" + str(peg_num) + " h" + str(peg_num+row_num) + " h" + str(peg_num+row_num*2-1) + ")\n" 
+                inline_string+= "\t(inline h" + str(peg_num+row_num*2-1) + " h" + str(peg_num+row_num) + " h" + str(peg_num) + ")\n"
+
+            peg_num+=1
+        col_reduc+=1
+    return inline_string
+
 def gen_define (problem):
     return "(define (problem " + problem + ")\n"
     
@@ -185,8 +413,20 @@ def gen_objects(shape, size):
         holes = size*size
         return objects(holes)
 
+    elif(shape=="square"):
+        holes = size*(size*2)
+        return objects(holes)
+
     elif(shape=="line"):
         return objects(size)
+
+    elif(shape=="diamond"):
+        holes = size*size
+        return objects(holes)
+
+    elif(shape=="arrow"):
+        holes = sum(range(1,size+3)) + size*size
+        return objects(holes)
 
     else:
         return "Invalid Shape For Goal"
@@ -219,8 +459,20 @@ def gen_goal(shape, size, not_empty):
         holes = size*size
         return goal(holes, not_empty)
 
+    elif(shape=="rectangle"):
+        holes = size*(size*2)
+        return goal(holes, not_empty)
+
     elif(shape=="line"):
         return goal(size, not_empty)
+
+    elif(shape=="diamond"):
+        holes = size*size
+        return goal(holes, not_empty)
+
+    elif(shape=="arrow"):
+        holes = sum(range(1,size+3)) + size*size
+        return goal(holes, not_empty)
 
     else:
         return "Invalid Shape For Goal"
@@ -251,13 +503,12 @@ def create_peg_problem(problem_name, domain, shape, size, empty, end_peg_hole):
     return final_pddl
 
 if __name__ == "__main__":
-	
     save_loc = os.path.normpath(os.getcwd() + os.sep + os.pardir + "/PDDL/pegsinholes")
     domain = "pegs"
-    shape = "square"
-    size = 5
-    empty = 1
-    end_peg_hole = 12
+    shape = "arrow"
+    size = 6
+    empty = 3
+    end_peg_hole = 4
 
     problem_name = shape+str(size)+"_"+str(empty)+"_"+str(end_peg_hole)
 

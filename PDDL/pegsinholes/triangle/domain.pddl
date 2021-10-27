@@ -1,0 +1,26 @@
+(define (domain pegs)
+(:requirements :strips :typing)
+(:predicates (in ?peg ?hole)
+             (adjacent ?hole1 ?hole2)
+             (empty ?hole)
+             (inline ?h1 ?h2 ?h3))
+
+(:action jump
+:parameters (?source ?over-hole ?destination ?moving ?over-peg)
+:precondition (and (in ?moving ?source)
+				(in ?over-peg ?over-hole)
+				(empty ?destination)
+				(adjacent ?source ?over-hole) 
+			    (adjacent ?over-hole ?destination)
+				(inline ?source ?over-hole ?destination) 
+				(not (empty ?source)) 
+                (not (empty ?over-hole)))
+			
+:effect  (and (in ?moving ?destination) 
+                (empty ?source) 
+				(empty ?over-hole)
+                (not (empty ?destination))
+                (not (in ?moving ?source)) 
+                (not (in ?over-peg ?over-hole))))
+                
+)
