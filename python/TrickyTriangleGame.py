@@ -106,6 +106,7 @@ class Board:
         #  4 5 6
         # 0 1 2 3
         set_lines("triangle", 4, self.lines, self.holes)
+
         count = 0
         for location in self.holes:
             location.insert_peg(Peg(count))
