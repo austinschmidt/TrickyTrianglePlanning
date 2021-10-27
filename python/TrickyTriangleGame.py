@@ -1,5 +1,5 @@
 #partially based on https://keras.io/examples/rl/actor_critic_cartpole/
-
+from PythonAdjacency import set_holes, set_lines
 import numpy as np
 import tensorflow as tf
 from tensorflow import keras
@@ -100,85 +100,12 @@ class Board:
                 self.holes.append(Hole(hole_count))
                 hole_count = hole_count +1
 
-        self.holes[0].add_adjacent(self.holes[1])
-        self.holes[0].add_adjacent(self.holes[2])
-
-        self.holes[1].add_adjacent(self.holes[0])
-        self.holes[1].add_adjacent(self.holes[2])
-        self.holes[1].add_adjacent(self.holes[3])
-        self.holes[1].add_adjacent(self.holes[4])
-
-        self.holes[2].add_adjacent(self.holes[0])
-        self.holes[2].add_adjacent(self.holes[1])
-        self.holes[2].add_adjacent(self.holes[4])
-        self.holes[2].add_adjacent(self.holes[5])
-
-        self.holes[3].add_adjacent(self.holes[1])
-        self.holes[3].add_adjacent(self.holes[4])
-        self.holes[3].add_adjacent(self.holes[6])
-        self.holes[3].add_adjacent(self.holes[7])
-
-        self.holes[4].add_adjacent(self.holes[1])
-        self.holes[4].add_adjacent(self.holes[2])
-        self.holes[4].add_adjacent(self.holes[3])
-        self.holes[4].add_adjacent(self.holes[5])
-        self.holes[4].add_adjacent(self.holes[7])
-        self.holes[4].add_adjacent(self.holes[8])
-
-        self.holes[5].add_adjacent(self.holes[2])
-        self.holes[5].add_adjacent(self.holes[4])
-        self.holes[5].add_adjacent(self.holes[8])
-        self.holes[5].add_adjacent(self.holes[9])
-        self.holes[5].add_adjacent(self.holes[7])
-
-        self.holes[6].add_adjacent(self.holes[3])
-        self.holes[6].add_adjacent(self.holes[7])
-
-        self.holes[7].add_adjacent(self.holes[3])
-        self.holes[7].add_adjacent(self.holes[4])
-        self.holes[7].add_adjacent(self.holes[7])
-        self.holes[7].add_adjacent(self.holes[8])
-
-        self.holes[8].add_adjacent(self.holes[4])
-        self.holes[8].add_adjacent(self.holes[5])
-        self.holes[8].add_adjacent(self.holes[7])
-        self.holes[8].add_adjacent(self.holes[9])
-
-        self.holes[9].add_adjacent(self.holes[5])
-        self.holes[9].add_adjacent(self.holes[8])
-
-        #    0
-        #   1 2
-        #  3 4 5
-        # 6 7 8 9
-
-        self.lines.append([self.holes[0],self.holes[1], self.holes[3]])
-        self.lines.append([self.holes[0],self.holes[2], self.holes[5]])
-
-        self.lines.append([self.holes[1],self.holes[3], self.holes[6]])
-        self.lines.append([self.holes[1],self.holes[4], self.holes[8]])
-
-        self.lines.append([self.holes[2],self.holes[4], self.holes[7]])
-        self.lines.append([self.holes[2],self.holes[5], self.holes[9]])
-        
-        self.lines.append([self.holes[3],self.holes[1], self.holes[0]])
-        self.lines.append([self.holes[3],self.holes[4], self.holes[5]])
-
-        self.lines.append([self.holes[5],self.holes[2], self.holes[0]])
-        self.lines.append([self.holes[5],self.holes[4], self.holes[3]])
-
-        self.lines.append([self.holes[6],self.holes[3], self.holes[1]])
-        self.lines.append([self.holes[6],self.holes[7], self.holes[8]])
-
-        self.lines.append([self.holes[7],self.holes[4], self.holes[2]])
-        self.lines.append([self.holes[7],self.holes[8], self.holes[9]])
-
-        self.lines.append([self.holes[8],self.holes[4], self.holes[1]])
-        self.lines.append([self.holes[8],self.holes[7], self.holes[6]])
-
-        self.lines.append([self.holes[9],self.holes[5], self.holes[2]])
-        self.lines.append([self.holes[9],self.holes[8], self.holes[7]])
-
+        set_holes("triangle", 4, self.holes)
+        #    9
+        #   7 8
+        #  4 5 6
+        # 0 1 2 3
+        set_lines("triangle", 4, self.lines, self.holes)
         count = 0
         for location in self.holes:
             location.insert_peg(Peg(count))
@@ -253,10 +180,9 @@ class Critic():
 
 if __name__ == "__main__":
     game = Board(4)
-
+    print("here")
     #actor critic model
     # Configuration parameters for the whole setup
-    
     gamma = 0.99  # Discount factor for past rewards
     max_steps_per_episode = 100
     num_inputs = len(game.holes)
@@ -361,5 +287,4 @@ if __name__ == "__main__":
         episode_count += 1
         if episode_count % 10 == 0:
             template = "running reward: {:.2f} at episode {}"
-            print(template.format(running_reward, episode_count))
-            
+            print(template.format(running_reward, episode_count))    
