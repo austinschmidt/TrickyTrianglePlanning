@@ -1,6 +1,8 @@
 (define (problem triangle5_2_2)
 (:domain pegs)
-(:objects p0 h0 p1 h1 p2 h2 p3 h3 p4 h4 p5 h5 p6 h6 p7 h7 p8 h8 p9 h9 p10 h10 p11 h11 p12 h12 p13 h13 h14 )
+(:objects 
+	p0 h0 p1 h1 p2 h2 p3 h3 p4 h4 p5 h5 p6 h6 p7 h7 p8 h8 p9 h9 
+	p10 h10 p11 h11 p12 h12 p13 h13 h14 )
 (:init
 	(empty h2)
 	(in p0 h0)
