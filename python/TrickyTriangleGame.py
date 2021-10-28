@@ -1,9 +1,11 @@
 #partially based on https://keras.io/examples/rl/actor_critic_cartpole/
-from PythonAdjacency import set_holes, set_lines
+import copy
 import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
+
+from PythonAdjacency import set_holes, set_lines
 
 class Peg():
     def __init__(self, id):
@@ -29,6 +31,14 @@ class Hole():
             return False
 
 class Board:
+    def __init__(self, num_levels):
+        self.num_levels = num_levels
+        self.reset()
+
+    def create_copy(self):
+        new = copy.deepcopy(self)
+        return new
+
     def peg_in(self, peg, hole):
         if self.holes[hole.peg.id].id is peg.id:
             return True
@@ -165,23 +175,19 @@ class Board:
                 done = False
                 
         return self.get_state(), reward, done, {}
-    
-
-    def __init__(self, num_levels):
-        self.num_levels = num_levels
-        self.reset()
-       
-
-class Actor():
-    pass
-
-class Critic():
-    pass
-        
 
 if __name__ == "__main__":
     game = Board(4)
-    print("here")
+
+    moves = game.legal_moves()
+    for i in range(len(moves)):
+        new = game.create_copy()
+        choice = new.legal_moves()[i]
+        a,b,c,d = choice
+        new.move_peg(a,b,c,d)
+        print()
+    
+    
     #actor critic model
     # Configuration parameters for the whole setup
     gamma = 0.99  # Discount factor for past rewards

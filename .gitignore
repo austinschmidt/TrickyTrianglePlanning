@@ -9,3 +9,4 @@
 /env
 /.vs/PythonSettings.json
 /.vs
+/python/__pycache__
