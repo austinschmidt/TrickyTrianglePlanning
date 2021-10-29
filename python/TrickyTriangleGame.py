@@ -204,6 +204,7 @@ class GameStateGraph:
                 a,b,c,d = choice
                 new.move_peg(a,b,c,d)
                 self.children.append(GameStateGraph.Node(new))
+                pass
 
 
     def __init__(self, first_node_element):
@@ -236,9 +237,12 @@ if __name__ == "__main__":
         while len(q)!= 0:
             v = q.popleft()
             for child in v.get_children():
-                if child.isViewed is False:
+                if child.isViewed() is False:
                     q.append(child)
                     child.mark_as_viewed()
+                    if len(child.get_element().legal_moves()) == 0:
+                        if child.get_element().number_of_pegs == 1:
+                            print("Solution found")
     
     machine_learning = False
     if machine_learning:
