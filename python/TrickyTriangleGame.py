@@ -36,6 +36,23 @@ class Board:
     def __init__(self, num_levels):
         self.num_levels = num_levels
         self.reset()
+        self.move = 0 
+
+    def print_state(self):
+        visual = list()
+        for h in self.holes:
+            if self.hole_empty(h):
+                visual.append("0")
+            else:
+                visual.append("1")
+        print(*visual)
+
+    def print_move(self):
+        self.print_state()
+        if self.move != 0:
+            a,b,c,d = self.move
+            print("peg"+str(a.id)+" source"+str(b.id)+" over"+str(c.id)+" dest"+str(d.id)+" and pegs count "+str(self.number_of_pegs))
+            
 
     def create_copy(self):
         new = copy.deepcopy(self)
@@ -184,6 +201,7 @@ class GameStateGraph:
             self.viewed = False
             self.children = list()
             self.element = element
+            
         def add_child(self, child_elememnt):
             child = Node(child_element)
             self.childen.append(child)
@@ -202,7 +220,11 @@ class GameStateGraph:
                 new = self.element.create_copy()
                 choice = new.legal_moves()[i]
                 a,b,c,d = choice
+                new.print_state()
                 new.move_peg(a,b,c,d)
+                new.print_state()
+                print()
+                new.move = choice
                 self.children.append(GameStateGraph.Node(new))
                 pass
 
@@ -227,19 +249,22 @@ class GameStateGraph:
 if __name__ == "__main__":
     game = Board(4)
 
-    bfs = True
-    if bfs:
+    dfs = True
+    if dfs:
         game_states = GameStateGraph(game)
         q = collections.deque()
         s = game_states.get_head()
         q.append(s)
         s.mark_as_viewed()
-        while len(q)!= 0:
+        
+        while len(q) > 0:
             v = q.popleft()
+            
             for child in v.get_children():
                 if child.isViewed() is False:
                     q.append(child)
                     child.mark_as_viewed()
+                    child.get_element().print_move()
                     if len(child.get_element().legal_moves()) == 0:
                         if child.get_element().number_of_pegs == 1:
                             print("Solution found")
