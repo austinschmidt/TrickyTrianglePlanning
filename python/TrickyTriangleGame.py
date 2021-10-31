@@ -100,7 +100,7 @@ class Board:
                         if over is not dest and h is not over and h is not dest:
                             if self.check_if_move_allowed(h.peg, h, over, dest):
                                 #print("peg"+str(h.peg.id)+" source"+str(h.id)+" over"+str(over.id)+" dest"+str(dest.id))
-                                legal_moves.append([h.peg, h, over, dest])
+                                legal_moves.append([h.peg, h, over, dest, "peg"+str(h.peg.id)+" source"+str(h.id)+" over"+str(over.id)+" dest"+str(dest.id)])
         return legal_moves
 
     def move_peg(self, peg, source_hole, over_hole, destination_hole):
@@ -226,7 +226,7 @@ class GameStateGraph:
             for i in range(len(moves)):
                 new = self.element.create_copy()
                 choice = new.legal_moves()[i]
-                a,b,c,d = choice
+                a,b,c,d,e = choice
                 print("Star")
                 new.print_state()
                 new.move_peg(a,b,c,d)
