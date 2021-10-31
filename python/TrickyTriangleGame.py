@@ -45,7 +45,14 @@ class Board:
                 visual.append("0")
             else:
                 visual.append("1")
-        print(*visual)
+
+        print("   "+str(visual[9]))
+        print("  "+str(visual[7])+" "+str(visual[8]))
+        print(" "+str(visual[4])+" "+str(visual[5])+" "+str(visual[6]))
+        print(str(visual[0])+" "+str(visual[1])+" "+str(visual[2])+" "+str(visual[3]))
+        
+
+        #print(*visual)
 
     def print_move(self):
         self.print_state()
@@ -129,12 +136,12 @@ class Board:
                 self.holes.append(Hole(hole_count))
                 hole_count = hole_count +1
 
-        set_holes("triangle", 4, self.holes)
+        set_holes("triangle", self.num_levels, self.holes)
         #    9
         #   7 8
         #  4 5 6
         # 0 1 2 3
-        set_lines("triangle", 4, self.lines, self.holes)
+        set_lines("triangle", self.num_levels, self.lines, self.holes)
 
         count = 0
         for location in self.holes:
@@ -220,9 +227,12 @@ class GameStateGraph:
                 new = self.element.create_copy()
                 choice = new.legal_moves()[i]
                 a,b,c,d = choice
+                print("Star")
                 new.print_state()
                 new.move_peg(a,b,c,d)
+                print("End")
                 new.print_state()
+                print()
                 print()
                 new.move = choice
                 self.children.append(GameStateGraph.Node(new))
@@ -258,12 +268,13 @@ if __name__ == "__main__":
         s.mark_as_viewed()
         
         while len(q) > 0:
-            v = q.popleft()
+            v = q.pop()
             
             for child in v.get_children():
                 if child.isViewed() is False:
                     q.append(child)
-                    child.mark_as_viewed()
+                    #child.mark_as_viewed()
+                    print()
                     child.get_element().print_move()
                     if len(child.get_element().legal_moves()) == 0:
                         if child.get_element().number_of_pegs == 1:
@@ -279,12 +290,12 @@ if __name__ == "__main__":
         num_actions = len(game.lines)
         eps = np.finfo(np.float32).eps.item()
     
-        num_hidden = 128
+        num_hidden = 512
 
         inputs = layers.Input(shape=(num_inputs,))
         x = layers.Dense(num_hidden, activation="relu")(inputs)
         common = layers.Dense(num_hidden, activation="relu")(x)
-        #common = layers.Dense(num_hidden, activation="relu")(common)
+        common = layers.Dense(num_hidden, activation="relu")(common)
         action = layers.Dense(num_actions, activation="softmax")(common)
         critic = layers.Dense(1)(common)
 
@@ -325,7 +336,7 @@ if __name__ == "__main__":
                     if done:
                         break
 
-                print(game.number_of_pegs)
+                
                 # Update running reward to check condition for solving
                 running_reward = 0.05 * episode_reward + (1 - 0.05) * running_reward
 
@@ -375,6 +386,6 @@ if __name__ == "__main__":
 
             # Log details
             episode_count += 1
-            if episode_count % 10 == 0:
+            if episode_count % 100 == 0:
                 template = "running reward: {:.2f} at episode {}"
                 print(template.format(running_reward, episode_count))    
