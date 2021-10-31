@@ -57,7 +57,7 @@ class Board:
     def print_move(self):
         self.print_state()
         if self.move != 0:
-            a,b,c,d = self.move
+            a,b,c,d,e = self.move
             print("peg"+str(a.id)+" source"+str(b.id)+" over"+str(c.id)+" dest"+str(d.id)+" and pegs count "+str(self.number_of_pegs))
             
 
