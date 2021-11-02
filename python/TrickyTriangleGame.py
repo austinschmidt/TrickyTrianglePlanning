@@ -51,11 +51,12 @@ class Board:
         #print(" "+str(visual[4])+" "+str(visual[5])+" "+str(visual[6]))
         #print(str(visual[0])+" "+str(visual[1])+" "+str(visual[2])+" "+str(visual[3]))
 
-        print("    "+str(visual[14]))
-        print("   "+str(visual[12])+" "+str(visual[13]))
-        print("  "+str(visual[9])+" "+str(visual[10])+" "+str(visual[11]))
-        print(" "+str(visual[5])+" "+str(visual[6])+" "+str(visual[7])+" "+str(visual[8]))
-        print(str(visual[0])+" "+str(visual[1])+" "+str(visual[2])+" "+str(visual[3])+" "+str(visual[4]))
+        print("     "+str(visual[20]))
+        print("    "+str(visual[18])+" "+str(visual[19]))
+        print("   "+str(visual[15])+" "+str(visual[16])+" "+str(visual[17]))
+        print("  "+str(visual[11])+" "+str(visual[12])+" "+str(visual[13])+" "+str(visual[14]))
+        print(" "+str(visual[6])+" "+str(visual[7])+" "+str(visual[8])+" "+str(visual[9])+" "+str(visual[10]))
+        print(str(visual[0])+" "+str(visual[1])+" "+str(visual[2])+" "+str(visual[3])+" "+str(visual[4])+" "+str(visual[5]))
         
 
         #print(*visual)
@@ -269,7 +270,7 @@ class GameStateGraph:
 
 
 if __name__ == "__main__":
-    game = Board(5)
+    game = Board(6)
 
     dfs = True
     if dfs:
