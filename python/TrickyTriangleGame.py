@@ -252,7 +252,7 @@ class GameStateGraph:
             return 
         else:
             for child in node.get_children():
-                return self.create_graph(child)
+                self.create_graph(child)
 
 
 
