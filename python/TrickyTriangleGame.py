@@ -304,6 +304,7 @@ if __name__ == "__main__":
                                     print("START")
                                 else: 
                                     print(node.element.move[4])
+        print(state_count)
     
     machine_learning = False
     if machine_learning:
