@@ -55,10 +55,10 @@ class Board:
         #print(*visual)
 
     def print_move(self):
-        self.print_state()
+        #self.print_state()
         if self.move != 0:
             a,b,c,d,e = self.move
-            print("peg"+str(a.id)+" source"+str(b.id)+" over"+str(c.id)+" dest"+str(d.id)+" and pegs count "+str(self.number_of_pegs))
+            #print("peg"+str(a.id)+" source"+str(b.id)+" over"+str(c.id)+" dest"+str(d.id)+" and pegs count "+str(self.number_of_pegs))
             
 
     def create_copy(self):
@@ -208,7 +208,11 @@ class GameStateGraph:
             self.viewed = False
             self.children = list()
             self.element = element
-            
+            self.parent = None
+        def add_parent(self, parent):
+            self.parent = parent
+        def get_parent(self):
+            return self.parent
         def add_child(self, child_elememnt):
             child = Node(child_element)
             self.childen.append(child)
@@ -227,15 +231,17 @@ class GameStateGraph:
                 new = self.element.create_copy()
                 choice = new.legal_moves()[i]
                 a,b,c,d,e = choice
-                print("Star")
-                new.print_state()
+                #print("Star")
+                #new.print_state()
                 new.move_peg(a,b,c,d)
-                print("End")
-                new.print_state()
-                print()
-                print()
+                #print("End")
+                #new.print_state()
+                #print()
+                #print()
                 new.move = choice
-                self.children.append(GameStateGraph.Node(new))
+                child = GameStateGraph.Node(new)
+                child.add_parent(self)
+                self.children.append(child)
                 pass
 
 
@@ -268,17 +274,28 @@ if __name__ == "__main__":
         s.mark_as_viewed()
         
         while len(q) > 0:
-            v = q.pop()
+            v = q.popleft()
             
             for child in v.get_children():
                 if child.isViewed() is False:
                     q.append(child)
-                    #child.mark_as_viewed()
-                    print()
-                    child.get_element().print_move()
+                    child.mark_as_viewed()
+                    #child.get_element().print_move()
                     if len(child.get_element().legal_moves()) == 0:
                         if child.get_element().number_of_pegs == 1:
                             print("Solution found")
+                            plan = list()
+                            plan.append(child)
+                            p = child.parent
+                            while(p is not None):
+                                plan.append(p)
+                                p = p.parent
+                            for node in reversed(plan):
+                                node.element.print_state()
+                                if node.element.move == 0:
+                                    print("START")
+                                else: 
+                                    print(node.element.move[4])
     
     machine_learning = False
     if machine_learning:
