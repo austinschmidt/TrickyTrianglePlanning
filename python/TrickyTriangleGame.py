@@ -46,10 +46,16 @@ class Board:
             else:
                 visual.append("1")
 
-        print("   "+str(visual[9]))
-        print("  "+str(visual[7])+" "+str(visual[8]))
-        print(" "+str(visual[4])+" "+str(visual[5])+" "+str(visual[6]))
-        print(str(visual[0])+" "+str(visual[1])+" "+str(visual[2])+" "+str(visual[3]))
+        #print("   "+str(visual[9]))
+        #print("  "+str(visual[7])+" "+str(visual[8]))
+        #print(" "+str(visual[4])+" "+str(visual[5])+" "+str(visual[6]))
+        #print(str(visual[0])+" "+str(visual[1])+" "+str(visual[2])+" "+str(visual[3]))
+
+        print("    "+str(visual[14]))
+        print("   "+str(visual[12])+" "+str(visual[13]))
+        print("  "+str(visual[9])+" "+str(visual[10])+" "+str(visual[11]))
+        print(" "+str(visual[5])+" "+str(visual[6])+" "+str(visual[7])+" "+str(visual[8]))
+        print(str(visual[0])+" "+str(visual[1])+" "+str(visual[2])+" "+str(visual[3])+" "+str(visual[4]))
         
 
         #print(*visual)
@@ -263,10 +269,11 @@ class GameStateGraph:
 
 
 if __name__ == "__main__":
-    game = Board(4)
+    game = Board(5)
 
     dfs = True
     if dfs:
+        state_count =0
         game_states = GameStateGraph(game)
         q = collections.deque()
         s = game_states.get_head()
@@ -275,6 +282,7 @@ if __name__ == "__main__":
         
         while len(q) > 0:
             v = q.popleft()
+            state_count = state_count+1
             
             for child in v.get_children():
                 if child.isViewed() is False:
