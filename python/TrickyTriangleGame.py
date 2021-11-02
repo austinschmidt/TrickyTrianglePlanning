@@ -46,17 +46,17 @@ class Board:
             else:
                 visual.append("1")
 
-        #print("   "+str(visual[9]))
-        #print("  "+str(visual[7])+" "+str(visual[8]))
-        #print(" "+str(visual[4])+" "+str(visual[5])+" "+str(visual[6]))
-        #print(str(visual[0])+" "+str(visual[1])+" "+str(visual[2])+" "+str(visual[3]))
+        print("   "+str(visual[9]))
+        print("  "+str(visual[7])+" "+str(visual[8]))
+        print(" "+str(visual[4])+" "+str(visual[5])+" "+str(visual[6]))
+        print(str(visual[0])+" "+str(visual[1])+" "+str(visual[2])+" "+str(visual[3]))
 
-        print("     "+str(visual[20]))
-        print("    "+str(visual[18])+" "+str(visual[19]))
-        print("   "+str(visual[15])+" "+str(visual[16])+" "+str(visual[17]))
-        print("  "+str(visual[11])+" "+str(visual[12])+" "+str(visual[13])+" "+str(visual[14]))
-        print(" "+str(visual[6])+" "+str(visual[7])+" "+str(visual[8])+" "+str(visual[9])+" "+str(visual[10]))
-        print(str(visual[0])+" "+str(visual[1])+" "+str(visual[2])+" "+str(visual[3])+" "+str(visual[4])+" "+str(visual[5]))
+        #print("     "+str(visual[20]))
+        #print("    "+str(visual[18])+" "+str(visual[19]))
+        #print("   "+str(visual[15])+" "+str(visual[16])+" "+str(visual[17]))
+        #print("  "+str(visual[11])+" "+str(visual[12])+" "+str(visual[13])+" "+str(visual[14]))
+        #print(" "+str(visual[6])+" "+str(visual[7])+" "+str(visual[8])+" "+str(visual[9])+" "+str(visual[10]))
+        #print(str(visual[0])+" "+str(visual[1])+" "+str(visual[2])+" "+str(visual[3])+" "+str(visual[4])+" "+str(visual[5]))
         
 
         #print(*visual)
@@ -270,7 +270,7 @@ class GameStateGraph:
 
 
 if __name__ == "__main__":
-    game = Board(6)
+    game = Board(4)
 
     dfs = True
     if dfs:
@@ -280,7 +280,7 @@ if __name__ == "__main__":
         s = game_states.get_head()
         q.append(s)
         s.mark_as_viewed()
-        
+        solutions_count = 0
         while len(q) > 0:
             v = q.popleft()
             state_count = state_count+1
@@ -292,6 +292,7 @@ if __name__ == "__main__":
                     #child.get_element().print_move()
                     if len(child.get_element().legal_moves()) == 0:
                         if child.get_element().number_of_pegs == 1:
+                            solutions_count = solutions_count +1
                             print("Solution found")
                             plan = list()
                             plan.append(child)
@@ -305,7 +306,8 @@ if __name__ == "__main__":
                                     print("START")
                                 else: 
                                     print(node.element.move[4])
-        print(state_count)
+        print(state_count) 
+        print(solutions_count)
     
     machine_learning = False
     if machine_learning:
