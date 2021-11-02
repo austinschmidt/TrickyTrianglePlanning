@@ -263,7 +263,7 @@ class GameStateGraph:
 
 
 if __name__ == "__main__":
-    game = Board(5)
+    game = Board(4)
 
     dfs = True
     if dfs:
