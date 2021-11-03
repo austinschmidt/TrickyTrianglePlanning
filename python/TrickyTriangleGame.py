@@ -46,10 +46,10 @@ class Board:
             else:
                 visual.append("1")
 
-        print("   "+str(visual[9]))
-        print("  "+str(visual[7])+" "+str(visual[8]))
-        print(" "+str(visual[4])+" "+str(visual[5])+" "+str(visual[6]))
-        print(str(visual[0])+" "+str(visual[1])+" "+str(visual[2])+" "+str(visual[3]))
+        #print("   "+str(visual[9]))
+        #print("  "+str(visual[7])+" "+str(visual[8]))
+        #print(" "+str(visual[4])+" "+str(visual[5])+" "+str(visual[6]))
+        #print(str(visual[0])+" "+str(visual[1])+" "+str(visual[2])+" "+str(visual[3]))
 
         #print("     "+str(visual[20]))
         #print("    "+str(visual[18])+" "+str(visual[19]))
@@ -130,25 +130,38 @@ class Board:
         self.holes = []
         self.levels = []
         self.lines = []
-        
+
         self.number_of_pegs = 0
+        #level_count = 0
+        #for i in range(self.num_levels):
+            #level_count = level_count + 1
+            #self.levels.append(level_count)
+
+        #"square"
         level_count = 0
         for i in range(self.num_levels):
-            level_count = level_count + 1
-            self.levels.append(level_count)
-
+            self.levels.append(self.num_levels)
         hole_count = 0
         for level in self.levels:
             for spot in range(level):
                 self.holes.append(Hole(hole_count))
                 hole_count = hole_count +1
+            
 
-        set_holes("triangle", self.num_levels, self.holes)
+        #hole_count = 0
+        #for level in self.levels:
+            #for spot in range(level):
+                #self.holes.append(Hole(hole_count))
+                #hole_count = hole_count +1
+
+        
+
+        set_holes("square", self.num_levels, self.holes)
         #    9
         #   7 8
         #  4 5 6
         # 0 1 2 3
-        set_lines("triangle", self.num_levels, self.lines, self.holes)
+        set_lines("square", self.num_levels, self.lines, self.holes)
 
         count = 0
         for location in self.holes:
@@ -270,7 +283,7 @@ class GameStateGraph:
 
 
 if __name__ == "__main__":
-    game = Board(5)
+    game = Board(4)
 
     dfs = True
     if dfs:
