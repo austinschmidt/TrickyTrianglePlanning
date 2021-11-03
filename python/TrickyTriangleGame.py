@@ -156,12 +156,12 @@ class Board:
 
         
 
-        set_holes("square", self.num_levels, self.holes)
+        set_holes("diamond", self.num_levels, self.holes)
         #    9
         #   7 8
         #  4 5 6
         # 0 1 2 3
-        set_lines("square", self.num_levels, self.lines, self.holes)
+        set_lines("daimond", self.num_levels, self.lines, self.holes)
 
         count = 0
         for location in self.holes:
